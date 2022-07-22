@@ -138,6 +138,13 @@ async function run() {
         })
 
 
+        // Get all questions api 
+        app.get("/getAllQuestions", async (req, res) => {
+            const cursor = allQuestionsCollection.find({});
+            const allQuestions = await cursor.toArray();
+            res.json(allQuestions);
+        });
+
 
 
 
@@ -377,8 +384,6 @@ async function run() {
             });
             res.send(result);
         });
-
-
 
 
 

@@ -145,9 +145,6 @@ async function run() {
             res.json(allQuestions);
         });
 
-
-
-
         // blog update status 
 
         app.put("/QuestionStatusUpdate/:id", async (req, res) => {
@@ -384,7 +381,6 @@ async function run() {
             });
             res.send(result);
         });
-
 
 
         // POST notes

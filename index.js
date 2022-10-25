@@ -28,6 +28,7 @@ async function run() {
         await client.connect();
         const database = client.db("EduBro");
         const allQuestionsCollection = database.collection("allQuestions");
+        const allAssignmentsCollection = database.collection("allAssignments");
         const allBooksCollection = database.collection("allBooks");
         const allSyllabusCollection = database.collection("allSyllabus");
         const allBlogsCollection = database.collection("allBlogs");
@@ -36,29 +37,8 @@ async function run() {
         const userCollection = database.collection("user");
         const reviewCollection = database.collection("review");
         const questionSolveCollection = database.collection("questionSolve");
+        const assignmentSolveCollection = database.collection("assignmentSolve");
         const BlogCommentCollection = database.collection("BlogComment");
-
-
-
-        // get question  solve
-
-        app.get('/getBlogComment', async (req, res) => {
-
-            const result = await BlogCommentCollection.find({}).toArray()
-            res.send(result)
-        })
-
-
-
-        // post blog comment 
-        app.post('/PostBlogComment', async (req, res) => {
-            const BlogComment = req.body;
-            const result = await BlogCommentCollection.insertOne(BlogComment);
-            res.json(result);
-            //console.log(result)
-
-        });
-
 
 
 
@@ -95,26 +75,59 @@ async function run() {
         // Get all questions api 
 
         app.get("/allQuestions", async (req, res) => {
+            // console.log(req.query)
+            const search = req.query.search
             const page = req.query.page;
             const size = parseInt(req.query.size);
             const query = req.query;
+            query.status = "approved"
             delete query.page
             delete query.size
+            delete query.search
             Object.keys(query).forEach(key => {
                 if (!query[key])
                     delete query[key]
             });
 
             if (Object.keys(query).length) {
-                const cursor = allQuestionsCollection.find(query, status = "approved");
+                // const cursor = allQuestionsCollection.find(query, status = "approved");
+                console.log(query);
+                const cursor = allQuestionsCollection.find(
+                    {
+                        ...query, $or: [
+                            { subject: { $regex: search, $options: 'i' } },
+                            { code: { $regex: search, $options: 'i' } },
+                            { department: { $regex: search, $options: 'i' } },
+                            { semester: { $regex: search, $options: 'i' } },
+                            { year: { $regex: search, $options: 'i' } },
+                            { userName: { $regex: search, $options: 'i' } },
+                            { email: { $regex: search, $options: 'i' } },
+                        ]
+                    }
+                );
+
+
                 const count = await cursor.count()
                 const allQuestions = await cursor.skip(page * size).limit(size).toArray()
+                console.log(allQuestions);
                 res.json({
                     allQuestions, count
                 });
+
             } else {
+                // const cursor = allQuestionsCollection.find({
+                //     status: "approved"
+                // });
                 const cursor = allQuestionsCollection.find({
-                    status: "approved"
+                    $or: [
+                        { subject: { $regex: search, $options: 'i' } },
+                        { code: { $regex: search, $options: 'i' } },
+                        { department: { $regex: search, $options: 'i' } },
+                        { semester: { $regex: search, $options: 'i' } },
+                        { year: { $regex: search, $options: 'i' } },
+                        { userName: { $regex: search, $options: 'i' } },
+                        { email: { $regex: search, $options: 'i' } },
+                    ]
                 });
                 const count = await cursor.count()
                 const allQuestions = await cursor.skip(page * size).limit(size).toArray()
@@ -145,7 +158,7 @@ async function run() {
             res.json(allQuestions);
         });
 
-        // blog update status 
+        // question status update
 
         app.put("/QuestionStatusUpdate/:id", async (req, res) => {
 
@@ -158,6 +171,143 @@ async function run() {
             });
             res.send(result);
         });
+
+
+
+        // POST solve
+        app.post('/addAssignmentSolve', async (req, res) => {
+            const assignmentSolve = req.body;
+            const result = await assignmentSolveCollection.insertOne(assignmentSolve);
+            res.json(result);
+            //console.log(result)
+
+        });
+
+
+
+        // get assignment  solve
+
+        app.get('/assignmentSolve/:id', async (req, res) => {
+            const result = await assignmentSolveCollection.find({ assignmentId: req.params.id }).toArray()
+            res.send(result)
+        })
+
+
+
+        // POST assignment
+        app.post('/postAssignment', async (req, res) => {
+            const allAssignments = req.body;
+            const result = await allAssignmentsCollection.insertOne(allAssignments);
+            res.json(result);
+            //console.log(result)
+
+        });
+
+
+        // Get all Assignments api 
+
+        app.get("/allAssignments", async (req, res) => {
+            // console.log(req.query)
+            const search = req.query.search
+            const page = req.query.page;
+            const size = parseInt(req.query.size);
+            const query = req.query;
+            query.status = "approved"
+            delete query.page
+            delete query.size
+            delete query.search
+            Object.keys(query).forEach(key => {
+                if (!query[key])
+                    delete query[key]
+            });
+
+            if (Object.keys(query).length) {
+                // const cursor = allAssignmentsCollection.find(query, status = "approved");
+                console.log(query);
+                const cursor = allAssignmentsCollection.find(
+                    {
+                        ...query, $or: [
+                            { subject: { $regex: search, $options: 'i' } },
+                            { code: { $regex: search, $options: 'i' } },
+                            { department: { $regex: search, $options: 'i' } },
+                            { semester: { $regex: search, $options: 'i' } },
+                            { year: { $regex: search, $options: 'i' } },
+                            { userName: { $regex: search, $options: 'i' } },
+                            { email: { $regex: search, $options: 'i' } },
+                        ]
+                    }
+                );
+
+
+                const count = await cursor.count()
+                const allAssignments = await cursor.skip(page * size).limit(size).toArray()
+                console.log(allAssignments);
+                res.json({
+                    allAssignments, count
+                });
+
+            } else {
+                // const cursor = allAssignmentsCollection.find({
+                //     status: "approved"
+                // });
+                const cursor = allAssignmentsCollection.find({
+                    $or: [
+                        { subject: { $regex: search, $options: 'i' } },
+                        { code: { $regex: search, $options: 'i' } },
+                        { department: { $regex: search, $options: 'i' } },
+                        { semester: { $regex: search, $options: 'i' } },
+                        { year: { $regex: search, $options: 'i' } },
+                        { userName: { $regex: search, $options: 'i' } },
+                        { email: { $regex: search, $options: 'i' } },
+                    ]
+                });
+                const count = await cursor.count()
+                const allAssignments = await cursor.skip(page * size).limit(size).toArray()
+
+                res.json({
+                    allAssignments, count
+                });
+            }
+
+        });
+
+
+
+
+
+        // get single Assignments
+        app.get('/assignment/:id', async (req, res) => {
+            const id = req.params.id;
+            const result = await allAssignmentsCollection.findOne({ _id: ObjectId(id) })
+            res.json(result)
+        })
+
+
+        // Get all Assignments api 
+        app.get("/getAllAssignments", async (req, res) => {
+            const cursor = allAssignmentsCollection.find({});
+            const allAssignments = await cursor.toArray();
+            res.json(allAssignments);
+        });
+
+        // Assignment status update
+
+        app.put("/AssignmentStatusUpdate/:id", async (req, res) => {
+
+            const filter = { _id: ObjectId(req.params.id) };
+
+            const result = await allAssignmentsCollection.updateOne(filter, {
+                $set: {
+                    status: req.body.status,
+                },
+            });
+            res.send(result);
+        });
+
+
+
+
+
 
 
 
@@ -229,6 +379,26 @@ async function run() {
             const result = await allSyllabusCollection.deleteOne(query);
             res.json(result);
         })
+
+
+        // get blog  comment 
+
+        app.get('/getBlogComment', async (req, res) => {
+
+            const result = await BlogCommentCollection.find({}).toArray()
+            res.send(result)
+        })
+
+
+
+        // post blog comment 
+        app.post('/PostBlogComment', async (req, res) => {
+            const BlogComment = req.body;
+            const result = await BlogCommentCollection.insertOne(BlogComment);
+            res.json(result);
+            //console.log(result)
+
+        });
 
 
         // blog update status 

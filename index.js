@@ -692,6 +692,15 @@ async function run() {
             res.json(result)
         })
 
+        //MAKE teacher
+        app.put('/users/teacher', async (req, res) => {
+            const user = req.body;
+            const filter = { email: user.email };
+            const updateDoc = { $set: { role: 'teacher' } };
+            const result = await userCollection.updateOne(filter, updateDoc)
+            res.json(result)
+        })
+
         //ADMIN CONDITIONALLY RENDERED
         app.get('/users/:email', async (req, res) => {
             const email = req.params.email;

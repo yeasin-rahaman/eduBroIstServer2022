@@ -174,6 +174,22 @@ async function run() {
 
 
 
+        // get my questions
+
+        app.get('/myQuestions/:email', async (req, res) => {
+            const result = await allQuestionsCollection.find({ email: req.params.email }).toArray()
+            res.send(result)
+        })
+
+
+        // Delete questions 
+        app.delete('/deleteQuestion/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await allQuestionsCollection.deleteOne(query);
+            res.json(result);
+        })
+
         // POST Assignment solve
         app.post('/addAssignmentSolve', async (req, res) => {
             const assignmentSolve = req.body;
@@ -304,7 +320,21 @@ async function run() {
             res.send(result);
         });
 
+        // get my Assignments
 
+        app.get('/myAssignments/:email', async (req, res) => {
+            const result = await allAssignmentsCollection.find({ email: req.params.email }).toArray()
+            res.send(result)
+        })
+
+
+        // Delete Assignments 
+        app.delete('/deleteAssignment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await allAssignmentsCollection.deleteOne(query);
+            res.json(result);
+        })
 
 
         // Delete Assignments 
@@ -640,21 +670,6 @@ async function run() {
 
 
 
-        // get my note
-
-        app.get('/myQuestions/:email', async (req, res) => {
-            const result = await allQuestionsCollection.find({ email: req.params.email }).toArray()
-            res.send(result)
-        })
-
-
-        // Delete questions 
-        app.delete('/deleteQuestion/:id', async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: ObjectId(id) };
-            const result = await allQuestionsCollection.deleteOne(query);
-            res.json(result);
-        })
 
 
 

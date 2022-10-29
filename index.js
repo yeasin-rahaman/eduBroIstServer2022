@@ -42,7 +42,7 @@ async function run() {
 
 
 
-        // POST solve
+        // POST question solve
         app.post('/addQuestionSolve', async (req, res) => {
             const questionSolve = req.body;
             const result = await questionSolveCollection.insertOne(questionSolve);
@@ -174,7 +174,7 @@ async function run() {
 
 
 
-        // POST solve
+        // POST Assignment solve
         app.post('/addAssignmentSolve', async (req, res) => {
             const assignmentSolve = req.body;
             const result = await assignmentSolveCollection.insertOne(assignmentSolve);
@@ -307,9 +307,13 @@ async function run() {
 
 
 
-
-
-
+        // Delete Assignments 
+        app.delete('/deleteAssignment/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await allAssignmentsCollection.deleteOne(query);
+            res.json(result);
+        })
 
 
 

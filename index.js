@@ -388,12 +388,6 @@ async function run() {
 
         // Get all syllabus api 
         app.get("/allSyllabus", async (req, res) => {
-            const cursor = allSyllabusCollection.find(query, status = "approved");
-            const allSyllabus = await cursor.toArray();
-            res.send(allSyllabus);
-        });
-        // Get all syllabus api 
-        app.get("/getAllSyllabus", async (req, res) => {
             const cursor = allSyllabusCollection.find({});
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
@@ -497,27 +491,6 @@ async function run() {
             });
         });
 
-        // Get all labs api 
-        app.get("/getAllLabs", async (req, res) => {
-            const cursor = allLabsCollection.find({});
-            const allLabs = await cursor.toArray();
-            res.json(allLabs);
-        });
-
-
-        // lab update status 
-
-        app.put("/labsStatusUpdate/:id", async (req, res) => {
-
-            const filter = { _id: ObjectId(req.params.id) };
-
-            const result = await allLabsCollection.updateOne(filter, {
-                $set: {
-                    status: req.body.status,
-                },
-            });
-            res.send(result);
-        });
 
 
         //post Labs
@@ -529,12 +502,11 @@ async function run() {
 
         });
 
-        //my Labs
+
         app.get('/myLabs/:email', async (req, res) => {
             const result = await allLabsCollection.find({ email: req.params.email }).toArray()
             res.send(result)
         })
-
 
         app.delete('/deleteLab/:id', async (req, res) => {
             const id = req.params.id;

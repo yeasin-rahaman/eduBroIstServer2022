@@ -392,6 +392,12 @@ async function run() {
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
         });
+        // Get all syllabus api 
+        app.get("/getAllSyllabus", async (req, res) => {
+            const cursor = allSyllabusCollection.find({});
+            const allSyllabus = await cursor.toArray();
+            res.send(allSyllabus);
+        });
 
 
         // syllabus update status 

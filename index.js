@@ -301,7 +301,7 @@ async function run() {
 
         // Get all Assignments api 
         app.get("/getAllAssignments", async (req, res) => {
-            const cursor = allAssignmentsCollection.find({});
+            const cursor = allAssignmentsCollection.find(query, status = "approved");
             const allAssignments = await cursor.toArray();
             res.json(allAssignments);
         });

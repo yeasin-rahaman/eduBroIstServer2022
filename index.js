@@ -499,6 +499,20 @@ async function run() {
         });
 
 
+        // lab update status 
+
+        app.put("/labsStatusUpdate/:id", async (req, res) => {
+
+            const filter = { _id: ObjectId(req.params.id) };
+
+            const result = await allLabsCollection.updateOne(filter, {
+                $set: {
+                    status: req.body.status,
+                },
+            });
+            res.send(result);
+        });
+
 
         //post Labs
         app.post('/postLabs', async (req, res) => {

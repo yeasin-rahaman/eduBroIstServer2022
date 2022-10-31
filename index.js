@@ -301,7 +301,7 @@ async function run() {
 
         // Get all Assignments api 
         app.get("/getAllAssignments", async (req, res) => {
-            const cursor = allAssignmentsCollection.find(query, status = "approved");
+            const cursor = allAssignmentsCollection.find({});
             const allAssignments = await cursor.toArray();
             res.json(allAssignments);
         });
@@ -388,7 +388,7 @@ async function run() {
 
         // Get all syllabus api 
         app.get("/allSyllabus", async (req, res) => {
-            const cursor = allSyllabusCollection.find({});
+            const cursor = allSyllabusCollection.find(query, status = "approved");
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
         });

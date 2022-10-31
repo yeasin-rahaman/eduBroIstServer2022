@@ -289,8 +289,6 @@ async function run() {
 
 
 
-
-
         // get single Assignments
         app.get('/assignment/:id', async (req, res) => {
             const id = req.params.id;
@@ -385,19 +383,20 @@ async function run() {
 
         });
 
-
         // Get all syllabus api 
         app.get("/allSyllabus", async (req, res) => {
-            const cursor = allSyllabusCollection.find(query, status = "approved");
+            const cursor = allSyllabusCollection.find({});
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
         });
+
         // Get all syllabus api 
         app.get("/getAllSyllabus", async (req, res) => {
             const cursor = allSyllabusCollection.find({});
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
         });
+
 
 
         // syllabus update status 
@@ -462,8 +461,8 @@ async function run() {
         app.post("/review", async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
-            console.log("review added", req.body);
-            console.log("successfully added review", result);
+            // console.log("review added", req.body);
+            // console.log("successfully added review", result);
             res.json(result);
         });
 
@@ -555,7 +554,7 @@ async function run() {
                 const response = await cloudinary.uploader.upload(blogImg, {
                     upload_preset: "Blogs"
                 })
-                console.log(response.url);
+                // console.log(response.url);
                 blogInfo.blogImg = response.url;
                 const result = await allBlogsCollection.insertOne(blogInfo);
                 res.json(result);

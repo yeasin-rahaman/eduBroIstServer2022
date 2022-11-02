@@ -355,8 +355,15 @@ async function run() {
         });
 
 
-        // Get all books api 
+        // Get all books approved for user 
         app.get("/allBooks", async (req, res) => {
+            const cursor = allBooksCollection.find({ status: "approved" });
+            const allBooks = await cursor.toArray();
+            res.send(allBooks);
+        });
+
+        // Get all books api 
+        app.get("/getAllBooks", async (req, res) => {
             const cursor = allBooksCollection.find({});
             const allBooks = await cursor.toArray();
             res.send(allBooks);
@@ -383,12 +390,13 @@ async function run() {
 
         });
 
-        // Get all syllabus api 
+        // Get all approver syllabus for user
         app.get("/allSyllabus", async (req, res) => {
-            const cursor = allSyllabusCollection.find({});
+            const cursor = allSyllabusCollection.find({ status: "approved" });
             const allSyllabus = await cursor.toArray();
             res.send(allSyllabus);
         });
+
 
         // Get all syllabus api 
         app.get("/getAllSyllabus", async (req, res) => {
@@ -477,23 +485,11 @@ async function run() {
 
 
 
-        //get all Labs
+        // Get all labs approved for user api 
         app.get("/allLabs", async (req, res) => {
-
-            const cursor = allLabsCollection.find({})
-            const page = req.query.page;
-            const size = parseInt(req.query.size);
-            let allLabs;
-            const count = await cursor.count();
-            if (page) {
-                allLabs = await cursor.skip(page * size).limit(size).toArray()
-            } else {
-                allLabs = await cursor.toArray();
-            }
-            res.send({
-                count,
-                allLabs
-            });
+            const cursor = allLabsCollection.find({ status: 'approved' });
+            const allLabs = await cursor.toArray();
+            res.json(allLabs);
         });
 
         // Get all labs api 
@@ -569,8 +565,15 @@ async function run() {
         });
 
 
-        // Get all blogs api 
+        // Get all blogs approved for user 
         app.get("/allBlogs", async (req, res) => {
+            const cursor = allBlogsCollection.find({ status: "approved" });
+            const allBlogs = await cursor.toArray();
+            res.send(allBlogs);
+        });
+
+        // Get all blogs api 
+        app.get("/getAllBlogs", async (req, res) => {
             const cursor = allBlogsCollection.find({});
             const allBlogs = await cursor.toArray();
             res.send(allBlogs);
@@ -623,8 +626,15 @@ async function run() {
 
         });
 
-        // Get all notes api 
+        // Get all approve notes for user  api 
         app.get("/allNotes", async (req, res) => {
+            const cursor = allNotesCollection.find({ status: 'approved' });
+            const allNotes = await cursor.toArray();
+            res.send(allNotes);
+        });
+
+        // Get all notes api 
+        app.get("/getAllNotes", async (req, res) => {
             const cursor = allNotesCollection.find({});
             const allNotes = await cursor.toArray();
             res.send(allNotes);

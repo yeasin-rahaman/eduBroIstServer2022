@@ -211,7 +211,7 @@ async function run() {
 
 
         // Delete question
-        app.delete('/addAssignmentSolve/:id', async (req, res) => {
+        app.delete('/deleteAssignmentSolve/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
             const result = await assignmentSolveCollection.deleteOne(query);

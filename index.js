@@ -210,7 +210,7 @@ async function run() {
 
 
 
-        // Delete question
+        // Delete assignment solve
         app.delete('/deleteAssignmentSolve/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };

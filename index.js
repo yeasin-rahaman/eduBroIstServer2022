@@ -52,7 +52,7 @@ async function run() {
         });
 
 
-        // Delete Assignments 
+        // Delete question
         app.delete('/deleteQuestionSolve/:id', async (req, res) => {
             const id = req.params.id;
             const query = { _id: ObjectId(id) };
@@ -208,6 +208,15 @@ async function run() {
 
         });
 
+
+
+        // Delete question
+        app.delete('/addAssignmentSolve/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await assignmentSolveCollection.deleteOne(query);
+            res.json(result);
+        })
 
 
         // get assignment  solve

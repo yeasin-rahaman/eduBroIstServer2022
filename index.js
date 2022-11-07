@@ -204,8 +204,6 @@ async function run() {
             const assignmentSolve = req.body;
             const result = await assignmentSolveCollection.insertOne(assignmentSolve);
             res.json(result);
-            //console.log(result)
-
         });
 
 
